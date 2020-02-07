@@ -10,19 +10,21 @@
           <span class="icon">
              <i class="userIcon"></i>
           </span>
-          <el-input class="user" placeholder='请输入账号' v-model="loginForm.username"></el-input>
+          <el-input type="text" class="user" placeholder='请输入账号' v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <span class="icon">
              <i class="passwordIcon"></i>
           </span>
-          <el-input placeholder='请输入密码' v-model="loginForm.password"></el-input>
+          <el-input type="password" placeholder='请输入密码' v-model="loginForm.password" show-password></el-input>
         </el-form-item>
         <el-form-item>
           <el-button class="btn" @click="loginBtn">登录</el-button>
         </el-form-item>
         <div class="formTips">
-          <p>若未拥有账号，请点击<a href="">注册</a></p>
+          <p>若未拥有账号，请点击
+            <router-link to="/register">注册</router-link>
+          </p>
         </div>
       </el-form>
     </div>
@@ -108,9 +110,7 @@ export default {
           width: 32px;
           height: 32px;  
         }
-      }
-      
-      
+      }  
       .btn{
         width: 380px;
         background-color: orange;
