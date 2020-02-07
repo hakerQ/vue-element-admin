@@ -5,12 +5,12 @@
         <img class="logo" :src="logo" alt="Admin">
         <span class="title">后台管理系统</span>
       </div>
-      <el-form class="loginForm" :model="loginForm" :rules="rules">
+      <el-form class="loginForm" :model="loginForm" :rules="rules" ref="loginForm">
         <el-form-item prop="username">
           <span class="icon">
              <i class="userIcon"></i>
           </span>
-          <el-input type="text" class="user" placeholder='请输入账号' v-model="loginForm.username"></el-input>
+          <el-input type="text" class="user" @keyup.enter.native="checkNext()" placeholder='请输入账号' v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <span class="icon">
@@ -19,7 +19,7 @@
           <el-input type="password" placeholder='请输入密码' v-model="loginForm.password" show-password></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="btn" @click="loginBtn">登录</el-button>
+          <el-button class="btn" @click="loginBtn('loginForm')">登录</el-button>
         </el-form-item>
         <div class="formTips">
           <p>若未拥有账号，请点击
@@ -55,8 +55,21 @@ export default {
     }
   },
   methods:{
-    loginBtn(){
-      console.log('----------')
+    checkNext(){
+      console.log('-----')
+    },
+    loginBtn(loginForm){
+      this.$refs[loginForm].validate((valid)=>{
+        if(valid){
+          //this.$router.push({path:'/home'})
+          this.axios.post('/api/login', {
+            username: this.loginForm.username,
+            password: this.loginForm.password
+          }).then((res)=>{
+            console.log(res)
+          })
+        }
+      })
     }
   }
 }
