@@ -7,11 +7,15 @@
       </div>
       <el-form class="loginForm" :model="loginForm" :rules="rules">
         <el-form-item prop="username">
-          <i class="userIcon"></i>
+          <span class="icon">
+             <i class="userIcon"></i>
+          </span>
           <el-input class="user" placeholder='请输入账号' v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <i class="passwordIcon"></i>
+          <span class="icon">
+             <i class="passwordIcon"></i>
+          </span>
           <el-input placeholder='请输入密码' v-model="loginForm.password"></el-input>
         </el-form-item>
         <el-form-item>
@@ -85,26 +89,28 @@ export default {
     }
     .loginForm{
       margin-top:17px;
-      .userIcon{
-        position: absolute;
-        background-image: url('../assets/imgs/user.png');
-        background-repeat: no-repeat;
+      .icon{
+        position: relative;
         left: 5px;
-        width: 32px;
-        height: 32px;
         z-index: 5;
         top:4px;
+        .userIcon{ 
+          position: absolute;
+          background-image: url('../assets/imgs/user.png');
+          background-repeat: no-repeat;
+          width: 32px;
+          height: 32px; 
+        }
+        .passwordIcon{ 
+          position: absolute;
+          background-image: url('../assets/imgs/lock.png');
+          background-repeat: no-repeat;
+          width: 32px;
+          height: 32px;  
+        }
       }
-      .passwordIcon{
-        position: absolute;
-        background-image: url('../assets/imgs/lock.png');
-        background-repeat: no-repeat;
-        left: 5px;
-        width: 32px;
-        height: 32px;
-        z-index: 5;
-        top:4px;
-      }
+      
+      
       .btn{
         width: 380px;
         background-color: orange;
