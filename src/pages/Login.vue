@@ -7,15 +7,11 @@
       </div>
       <el-form class="loginForm" :model="loginForm" :rules="rules">
         <el-form-item prop="username">
-          <span>
-            <i></i>
-          </span>
-          <el-input placeholder='请输入账号' v-model="loginForm.username"></el-input>
+          <i class="userIcon"></i>
+          <el-input class="user" placeholder='请输入账号' v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <span>
-            <i></i>
-          </span>
+          <i class="passwordIcon"></i>
           <el-input placeholder='请输入密码' v-model="loginForm.password"></el-input>
         </el-form-item>
         <el-form-item>
@@ -89,6 +85,26 @@ export default {
     }
     .loginForm{
       margin-top:17px;
+      .userIcon{
+        position: absolute;
+        background-image: url('../assets/imgs/user.png');
+        background-repeat: no-repeat;
+        left: 5px;
+        width: 32px;
+        height: 32px;
+        z-index: 5;
+        top:4px;
+      }
+      .passwordIcon{
+        position: absolute;
+        background-image: url('../assets/imgs/lock.png');
+        background-repeat: no-repeat;
+        left: 5px;
+        width: 32px;
+        height: 32px;
+        z-index: 5;
+        top:4px;
+      }
       .btn{
         width: 380px;
         background-color: orange;
