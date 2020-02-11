@@ -15,7 +15,7 @@
           <el-input type="password" placeholder='确认密码' v-model="registerForm.checkpass" show-password></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="btn" @click="registerBtn">注册</el-button>
+          <el-button class="btn" @click="registerBtn(registerForm)" :plain="true">注册</el-button>
         </el-form-item>
       </el-form>
       <div>
@@ -28,26 +28,33 @@
 </template>
 
 <script>
+import {register} from '../api/index.js'
 
 export default {
   name:'register',
   data(){
     var checkUser = (rule, value, callback) => {
-        if (!value) {
+       var pregName = /^[a-zA-Z][a-zA-Z0-9_]{4,11}$/;
+        if(!value) {
           return callback(new Error('用户名不能为空'));
-        }else if(value.length > 3 && value.length < 6){
-          return callback(new Error('用户名长度为3-6'))
+        }
+        if(!pregName.test(value)){
+          return callback(new Error('字母开头，长度为5-12，允许字母数字下划线'))
         }
       };
     var validatePass = (rule, value, callback) => {
-        if (value === '') {
+        var pregPwd = /^[a-zA-Z]\w{5,17}$/;
+        if(value === ''){
           callback(new Error('请输入密码'));
+        }
+        if (!pregPwd.test(value)) {
+          callback(new Error('以字母开头，长度在6~18之间，只能包含字母、数字和下划线'))
         } else {
           if (this.registerForm.checkpass !== '') {
             this.$refs.registerForm.validateField('checkPass');
           }
           callback();
-        }
+        }       
       };
       var validatePass2 = (rule, value, callback) => {
         if (value === '') {
@@ -58,6 +65,7 @@ export default {
           callback();
         }
       };
+      
     return{
       registerForm:{
         username:'',
@@ -78,8 +86,39 @@ export default {
     }
   },
   methods:{
-    registerBtn(){
-      console.log('----------')
+    registerBtn(registerForm){
+      let user = {
+        userName:this.registerForm.username,
+        password:this.registerForm.password
+      }
+      if(registerForm.username == '' || registerForm.password == '' || registerForm.checkpass==''){
+        this.$message({
+          message:'请填写完整信息',
+          type: 'error',
+          center: true
+        })
+      }else if(registerForm.password == registerForm.checkpass){
+        register(user).then((res)=>{
+          if(res.data.status == 1){
+            this.$message({
+              message: res.data.message,
+              center:true,
+              type: 'success',
+              duration: 800
+            })
+            this.$refs.registerForm.resetFields();
+            setTimeout(()=>{
+              this.$router.push({path:'/login'})
+            },2000)
+          }else if(res.data.status == 0){
+            this.$message({
+              message:res.data.message,
+              center:true,
+              type:'error'
+            })
+          }
+        }).catch(err=>{throw err})
+      }
     }
   }
 }

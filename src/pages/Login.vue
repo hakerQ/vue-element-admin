@@ -6,11 +6,11 @@
         <span class="title">后台管理系统</span>
       </div>
       <el-form class="loginForm" :model="loginForm" :rules="rules" ref="loginForm">
-        <el-form-item prop="username">
+        <el-form-item prop="userName">
           <span class="icon">
              <i class="userIcon"></i>
           </span>
-          <el-input type="text" class="user" @keyup.enter.native="checkNext()" placeholder='请输入账号' v-model="loginForm.username"></el-input>
+          <el-input type="text" class="user"  placeholder='请输入账号' v-model="loginForm.userName"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <span class="icon">
@@ -33,43 +33,75 @@
 
 <script>
 import logoImg from '@/assets/imgs/logo.png'
+import {login} from '../api/index.js'
 export default {
   name:'login',
   data(){
     return{
       logo:logoImg,
       loginForm:{
-        username:'',
+        userName:'',
         password:''
       },
       rules:{
-        username:[
+        userName:[
           { required: true, message: '请输入账号', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 3, max: 9, message: '长度在 5 到 12 个字符', trigger: 'blur' }
         ],
         password:[
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 12, message: '长度在 6 到 12个字符', trigger: 'blur' }
+          { min: 6, max: 12, message: '长度在 6 到 18个字符', trigger: 'blur' }
         ]
       }
     }
   },
   methods:{
-    checkNext(){
-      console.log('-----')
-    },
     loginBtn(loginForm){
-      this.$refs[loginForm].validate((valid)=>{
-        if(valid){
-          //this.$router.push({path:'/home'})
-          this.axios.post('/api/login', {
-            username: this.loginForm.username,
-            password: this.loginForm.password
-          }).then((res)=>{
-            console.log(res)
-          })
-        }
-      })
+       this.$refs[loginForm].validate((valid) => {
+          if (valid) {
+            let userInfo = {
+              userName: this.loginForm.userName,
+              password: this.loginForm.password
+            };
+            login(userInfo).then((res)=>{
+              let resp = res.data;
+              if(resp.status == -1){
+                this.$message({
+                  message: resp.message,
+                  center: true,
+                  type: 'error',
+                  duration: 800
+                })
+              }else if(resp.status == 3){
+                this.$message({
+                  message: resp.message,
+                  center: true,
+                  type: 'error',
+                  duration: 800
+                })
+              }else if(resp.status == 2){
+                const loading = this.$loading({
+                  lock: true,
+                  text: 'Loading',
+                  spinner: 'el-icon-loading',
+                  background: 'rgba(0, 0, 0, 0.7)'
+                });
+                setTimeout(() => {
+                  loading.close();
+                  this.$router.push({path:'/home'})
+                }, 1000);  
+              }
+            }).catch((err)=>{})
+          } else {
+            // this.$message({
+            //       message: '请输入账号和密码',
+            //       center: true,
+            //       type: 'error',
+            //       duration: 800
+            //     })
+            return false;
+          }
+        });
     }
   }
 }
